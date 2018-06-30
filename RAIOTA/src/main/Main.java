@@ -22,6 +22,7 @@ public class Main {
 						
 		 }.apply()).obs(B.getField("lock"));
 	
+		System.out.println(A.getField("lock").current());
 				
 		A.getField("lock").change("unlocked");
 		
