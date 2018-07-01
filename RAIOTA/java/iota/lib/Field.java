@@ -8,9 +8,9 @@ public class Field<A> extends CellSink<A> {
 	
 	A old;
 
-	public Field(String fName, A value) {
+	public Field(A fName, A value) {
 		super(value);
-		this.fName = value;
+		this.fName = fName;
 	}
 	
 	public Field() {
@@ -41,5 +41,16 @@ public class Field<A> extends CellSink<A> {
 		old = this.current();
 		this.send(value);
 		this.sample();
+	}
+	
+	public Field set(A f , A c ) {
+		
+		return new Field(c, f);
+	}
+	
+	public Field conv(Form f) {
+		f.obs(this);
+		
+		return this;
 	}
 }

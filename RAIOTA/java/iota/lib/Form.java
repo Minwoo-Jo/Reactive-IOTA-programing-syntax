@@ -54,8 +54,7 @@ public class Form {
 	
 	public Form chain(Form f) {
 		
-		this.conn(new Linker().set(pf, a.get()).conv(f));
-		
+		//this.conn(new Linker().set(pf, a.get()).conv(f));
 		return this;
 	}
 

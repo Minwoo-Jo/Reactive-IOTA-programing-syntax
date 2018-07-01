@@ -20,15 +20,7 @@ public class Linker <A> extends Field{
 		super(value);
 	}
 	
-	public Linker set(A a, A b) {
-		this.command = b;
-		send(a);
-		sample();
-		return this;
-		
-	}
 	
-
 	public Form link(Form form) {
 			
 		return form.conn(this);
