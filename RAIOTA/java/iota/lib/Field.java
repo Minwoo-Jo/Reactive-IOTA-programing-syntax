@@ -18,7 +18,7 @@ public final class Field<A> extends CellSink<A> {
 	}
 
 	public A current() {
-		return this.sample();
+		return this.sampleLazy().get();
 	}
 	public A old() {
 		return this.old;

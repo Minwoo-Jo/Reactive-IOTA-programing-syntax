@@ -14,6 +14,7 @@ public class Main {
 		Form fm = new Form();
 
 		
+		
 		A.getField("lock").link(new Form() {
 			
 			Form apply() {
@@ -27,7 +28,7 @@ public class Main {
 			
 		}.apply()).obs(B.getField("lock")).shoot(new Command("unlocked"));
 		
-		A.getField("lock").link(fm).obs(B.getField("lock")).set(new BasicCondition());
+		//A.getField("lock").link(fm).obs(B.getField("lock")).set(new BasicCondition());
 
 		//System.out.println(A.getField("lock").current());
 				
@@ -35,11 +36,13 @@ public class Main {
 	
 		//B.getField("lock").change("locked");
 	
-	
+		System.out.println("!" + A.getField("lock").current());
+		
 		B.getField("lock").change("unlocked");
 		
-
 		System.out.println("!" + A.getField("lock").current());
+		System.out.println("!" + A.getField("lock").old());
+		
 
 	}
 
