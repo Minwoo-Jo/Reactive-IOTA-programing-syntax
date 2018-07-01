@@ -3,7 +3,7 @@ package iota.lib;
 import nz.sodium.*;
 import java.util.Optional.*;
 
-public final class Field<A> extends CellSink<A> {
+public class Field<A> extends CellSink<A> {
 	A fName;
 	
 	A old;
@@ -11,6 +11,13 @@ public final class Field<A> extends CellSink<A> {
 	public Field(String fName, A value) {
 		super(value);
 		this.fName = value;
+	}
+	
+	public Field() {
+		super(null);
+	}
+	public Field(A value) {
+		super(value);
 	}
 
 	public Form link(Form form) {
@@ -27,6 +34,12 @@ public final class Field<A> extends CellSink<A> {
 	public void change(A value) {
 		old = this.current();
 		this.send(value);
-		System.out.println(this.sample());
+		this.sample();
+	}
+	
+	public void change(A x, A value) {
+		old = this.current();
+		this.send(value);
+		this.sample();
 	}
 }

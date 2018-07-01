@@ -30,12 +30,7 @@ public class Main {
 		
 		//A.getField("lock").link(fm).obs(B.getField("lock")).set(new BasicCondition());
 
-		//System.out.println(A.getField("lock").current());
-				
-		
-	
-		//B.getField("lock").change("locked");
-	
+			
 		System.out.println("!" + A.getField("lock").current());
 		
 		B.getField("lock").change("unlocked");
@@ -61,6 +56,7 @@ public class Main {
  *					obs	   : Form이 받는 스트림을 발사하는 field를 연결한다.
  *					def    : 들어오는 event를 설정한다.
  *					shoot  : 발사하는 action을 설정한다.
+ *					chain  : form 과 form 을 연결한다.
  *
  *			Field:: 상태를 가진 객체 Sodium의 CellSink를 상속받아 구현
  *
@@ -68,6 +64,12 @@ public class Main {
  *					change : Field의 값을 바꾼다.
  *					old	   : 이전 값을 받아온다.
  *					current: 현재 값을 받아온다.
+ *			
+ *			Linker::Form과 Form을 연결할 때 사용되는 중간 객체 Field를 상속 받는다.
+ *
+ *					set	   : 들어오는 값을 저장한다.
+ *					get	   : 받은 값을 보내준다.
+ *					conv   : Linker에서 나오는 스트림을 받는 Form을 연결한다.
  *		
  *		interface 
  *			Condition  	: 

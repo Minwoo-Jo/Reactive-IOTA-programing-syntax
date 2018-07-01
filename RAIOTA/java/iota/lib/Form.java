@@ -9,15 +9,16 @@ public class Form {
 	Command a;
 	
 
-	Stream lf;
-	Stream event;
-	Stream action;
+	Stream<Field> lf;
+	Stream<Field> event;
+	Stream<Field> action;
 
 	Listener perform;
 
 	Field pf;
 
 	public Form() {
+		lf = new Stream();
 		e = new NullEvent();
 		c = new TrueCondition();
 		a = new Command(null);
@@ -33,20 +34,28 @@ public class Form {
 		return this;
 	}
 
+
 	public Form obs(Field f) {
 
-		this.lf = Operational.updates(f);
+		this.lf = lf.orElse((Operational.updates(f).map(x -> f)));
 
-		event = lf.filter(Boolean -> e.checkType(f));
+		event = lf.filter(x -> e.checkType(x));
 
-		action = event.map(x -> c).filter(Boolean -> c.isTrue());
+		action = event.map(x -> pf).filter(Boolean -> c.isTrue());
 
 		perform = action.listen(x -> new Thread() {
 			public void run() {
-				pf.change(a.get());
+				x.change(x, a.get());
 			}
 		}.start());
 
+		return this;
+	}
+	
+	public Form chain(Form f) {
+		
+		this.conn(new Linker().set(pf, a.get()).conv(f));
+		
 		return this;
 	}
 
