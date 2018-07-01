@@ -6,7 +6,7 @@
 					
   					conn   : Form과 Form의 스트림을 받는 field를 연결시킨다.
   					set    : Condition을 설정한다.
- 					obs	   : Form이 받는 스트림을 발사하는 field를 연결한다.
+ 					obs    : Form이 받는 스트림을 발사하는 field를 연결한다.
  					def    : 들어오는 event를 설정한다.
 
  			Field:: 상태를 가진 객체 Sodium의 CellSink를 상속받아 구현
