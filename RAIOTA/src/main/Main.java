@@ -50,21 +50,31 @@ public class Main {
  * 
  * Reactive IOTA programing syntax 작성중
  * 
- * 객체 :
- * 		Device		<-- Feild가 들어있는 객체
- * 		
- * 		Field 		<-- CellSink를 상속 받아 구현
- * 		Form  		<-- Stream을 바꿔주는 객체
- * 		Condition	<-- Form의 내용을 구성하는 객체
+ * 
+ * 			Form :: field와 field를 연결 시켜주는 객체
+ * 					
+ * 					conn   : Form과 Form의 스트림을 받는 field를 연결시킨다.
+ * 					set    : Condition을 설정한다.
+ *					obs	   : Form이 받는 스트림을 발사하는 field를 연결한다.
+ *					def    : 들어오는 event를 설정한다.
+ *					shoot  : 발사하는 action을 설정한다.
  *
- * 		
- * 		사용 가능한 문법		
- * 				conn	x y 	:: Field 	-> Form 	-> Form 
- * 					--> Form에서 나오는 Stream을 받을 Field와 연결
- * 				obs		x y 	:: Form 	-> Field	-> Form
- * 					--> Form으로 들어가는 Stream을 발사하는 Field와 연결
- * 				set		x y		:: Form		-> Condition-> Form
- * 					--> Form에 Condition을 부여
+ *			Field:: 상태를 가진 객체 Sodium의 CellSink를 상속받아 구현
+ *
+ *					link   : Field와 Form을 연결한다.
+ *					change : Field의 값을 바꾼다.
+ *					old	   : 이전 값을 받아온다.
+ *					current: 현재 값을 받아온다.
+ *		
+ *		interface 
+ *			Condition  	: 
+ *				isTrue() 메소드를 가진다. Boolean 값을 반환.
+ *				Form에 조건을 설정할 때 사용.
+ *
+ *			EventHandler: 
+ *				typeCheck() 메소드를 가진다. 
+ *				Event의 타입을 결정할 때 사용.
+ *
  */
 
 
