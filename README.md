@@ -13,7 +13,7 @@
  
  					link   : Field와 Form을 연결한다.
  					change : Field의 값을 바꾼다.
- 					old	   : 이전 값을 받아온다.
+ 					old    : 이전 값을 받아온다.
  					current: 현재 값을 받아온다.
 
  		interface 
