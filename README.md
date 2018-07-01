@@ -17,10 +17,10 @@
  					current: 현재 값을 받아온다.
 
  		interface 
- 			Condition  	: 
+ 			Condition  	 
  				isTrue() 메소드를 가진다. Boolean 값을 반환.
  				Form에 조건을 설정할 때 사용.
  
- 			EventHandler: 
+ 			EventHandler 
  				typeCheck() 메소드를 가진다. 
  				Event의 타입을 결정할 때 사용.
