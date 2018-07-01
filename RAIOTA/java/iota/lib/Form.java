@@ -2,33 +2,46 @@ package iota.lib;
 
 import java.util.ArrayList;
 
+import nz.sodium.*;
+
 public class Form {
 
-	ArrayList<Field> pf = new ArrayList<>();
-	Field lf;
+	Field pf;
 
 	Condition c;
-	
+
+	Stream lf;
+	Stream handler;
+
+	Listener shoot;
+
 	public Form() {
-		pf = new ArrayList<>();
-		lf = new Field<String>(null, "A");
+		pf = new Field(null, null);
+
+		lf = new Stream();
+		handler = lf.map(x -> c).filter(Boolean -> c.isTrue());
+
+		shoot = handler.listen(x -> new Thread() {
+			public void run() {
+				pf.change("A");
+			}
+		}.start());
+
 	}
 
 	public Form conn(Field f) {
-		pf.add(f);
+		pf = f;
 		return this;
 	}
 
-
 	public void obs(Field f) {
-		lf = f;
+		this.lf = lf.orElse((Operational.updates(f)));
 	}
 
-
 	public Form apply(Condition c) {
-		
+
 		this.c = c;
-		return new Form();
+		return this;
 	}
 
 }
