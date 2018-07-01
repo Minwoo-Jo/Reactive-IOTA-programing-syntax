@@ -11,23 +11,36 @@ public class Main {
 		Door A = new Door("frontDoor");
 		Door B = new Door("backDoor");
 		
-		A.getField("lock").link(new Form() {
+		Form fm = new Form();
+
 		
-			Condition c = new BasicCondition();
+		A.getField("lock").link(new Form() {
 			
-			public Form apply() {
-				return apply(c);
+			Form apply() {
+				EventHandler e = new From("locked");
+				Condition c = new TrueCondition();
+				
+				def(e);
+				set(c);
+				return this;
 			}
 			
-						
-		 }.apply()).obs(B.getField("lock"));
-	
-		System.out.println(A.getField("lock").current());
-				
-		A.getField("lock").change("unlocked");
+		}.apply()).obs(B.getField("lock")).shoot(new Command("unlocked"));
 		
-		System.out.println(A.getField("lock").current());
-		System.out.println(A.getField("lock").old());
+		A.getField("lock").link(fm).obs(B.getField("lock")).set(new BasicCondition());
+
+		//System.out.println(A.getField("lock").current());
+				
+		
+	
+		//B.getField("lock").change("locked");
+	
+	
+		B.getField("lock").change("unlocked");
+		
+
+		System.out.println("!" + A.getField("lock").current());
+
 	}
 
 	
@@ -48,10 +61,10 @@ public class Main {
  * 		사용 가능한 문법		
  * 				conn	x y 	:: Field 	-> Form 	-> Form 
  * 					--> Form에서 나오는 Stream을 받을 Field와 연결
- * 				obs		x y 	:: Form 	-> Field	-> Void
- * 
- * 				apply	x y		:: Form		-> Condition-> Form
- * 
+ * 				obs		x y 	:: Form 	-> Field	-> Form
+ * 					--> Form으로 들어가는 Stream을 발사하는 Field와 연결
+ * 				set		x y		:: Form		-> Condition-> Form
+ * 					--> Form에 Condition을 부여
  */
 
 

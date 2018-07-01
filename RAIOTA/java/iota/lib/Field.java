@@ -27,5 +27,6 @@ public final class Field<A> extends CellSink<A> {
 	public void change(A value) {
 		old = this.current();
 		this.send(value);
+		System.out.println(this.sample());
 	}
 }

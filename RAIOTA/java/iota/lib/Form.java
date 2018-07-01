@@ -1,46 +1,70 @@
 package iota.lib;
 
-import java.util.ArrayList;
-
 import nz.sodium.*;
 
 public class Form {
+	
+	EventHandler e;
+	Condition c;
+	Command a;
+	
+
+	Stream lf;
+	Stream event;
+	Stream action;
+
+	Listener perform;
 
 	Field pf;
 
-	Condition c;
-
-	Stream lf;
-	Stream handler;
-
-	Listener shoot;
-
 	public Form() {
-		pf = new Field(null, null);
-
-		lf = new Stream();
-		handler = lf.map(x -> c).filter(Boolean -> c.isTrue());
-
-		shoot = handler.listen(x -> new Thread() {
-			public void run() {
-				pf.change("A");
-			}
-		}.start());
+		e = new NullEvent();
+		c = new TrueCondition();
+		a = new Command(null);
+		
+		
 
 	}
 
 	public Form conn(Field f) {
-		pf = f;
+
+		this.pf = f;
+
 		return this;
 	}
 
-	public void obs(Field f) {
-		this.lf = lf.orElse((Operational.updates(f)));
+	public Form obs(Field f) {
+
+		this.lf = Operational.updates(f);
+
+		event = lf.filter(Boolean -> e.checkType(f));
+
+		action = event.map(x -> c).filter(Boolean -> c.isTrue());
+
+		perform = action.listen(x -> new Thread() {
+			public void run() {
+				pf.change(a.get());
+			}
+		}.start());
+
+		return this;
 	}
 
-	public Form apply(Condition c) {
+	public Form set(Condition c) {
 
 		this.c = c;
+
+		return this;
+	}
+
+	public Form def(EventHandler e) {
+		this.e = e;
+		return this;
+	}
+
+	public Form shoot(Command a) {
+		
+		this.a = a;
 		return this;
 	}
 
