@@ -1,8 +1,8 @@
 package main;
 
-import iota.lib.Condition;
+import iota.lib.Predicate;
 
-public class BasicCondition implements Condition{
+public class BasicCondition implements Predicate{
 
 	public Boolean isTrue() {
 		System.out.println("false");
