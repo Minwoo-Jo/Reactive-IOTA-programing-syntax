@@ -7,10 +7,11 @@ public class From<A> implements EventHandler{
 	public From(A value) {
 		this.value = value;
 	}
+
 	@Override
-	public Boolean checkType(Field f) {
-		
-		return f.old().equals(value);
+	public Boolean checkType(Bullet b) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

@@ -8,11 +8,12 @@ public class To<A> implements EventHandler {
 		this.value = value;
 	}
 
+
 	@Override
-	public Boolean checkType(Field f) {
-
-		return f.current().equals(value);
-
+	public Boolean checkType(Bullet b) {
+		// TODO Auto-generated method stub
+		System.out.println(b.getCurrent());
+		return b.getCurrent().equals(value);
 	}
 
 }
