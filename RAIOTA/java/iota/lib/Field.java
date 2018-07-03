@@ -7,60 +7,69 @@ import java.util.Optional.*;
 
 public class Field<A> {
 	private A fName;
+	private String id;
 
-	private ArrayList<A> status= new ArrayList();;
+	private ArrayList<A> status = new ArrayList();;
 
-	private StreamSink<SingleBullet> inputStream;
-	private Stream<Bullet> inputFromArrow;
+	private StreamSink<SingleBullet<Atom>> inputStream;
+	private Stream<Bullet<Atom>> inputFromArrow;
 
-	private Stream<Bullet> checkEffectiveness;
+	private Stream<Atom> checkEffectiveness;
 
-	private Stream<Bullet> effectiveCommand;
-	private Bullet<A> old;
-	private Cell<Bullet> current;
-	private Stream<Bullet> setOutput;
-	private Stream<Bullet> outputStream;
+	private Stream<Atom> effectiveCommand;
+	private Atom old = new Atom();
+
+	private Cell<Atom> current = new Cell<Atom>(null);
+
+	private Stream<Atom> setOutput;
+	private Stream<Bullet<Atom>> outputStream;
 
 	public Field(A fName) {
 
 		this.fName = fName;
+		this.id = this.toString();
 
-			inputStream = new StreamSink();
-			inputFromArrow = new Stream().orElse(inputStream);
+		inputStream = new StreamSink();
+		inputFromArrow = new Stream().orElse(inputStream);
 
-			checkEffectiveness = inputFromArrow.filter(x -> isCorrectCommand(x));
+		checkEffectiveness = inputFromArrow.filter(x -> isCorrectCommand(x.getValue()))
+				.map(x -> new Atom(x.getValue().get()));
 
-			effectiveCommand = checkEffectiveness.filter(x -> status.contains(x.getValue()));
-			current = effectiveCommand.hold(null);
-			setOutput = Operational.updates(current);
-			outputStream = setOutput.map(x -> new FieldBullet(this, old().getValue(), current().getValue()));
-
+		effectiveCommand = checkEffectiveness.filter(x -> status.contains(x.get()));
+		current = effectiveCommand.hold(null);
+		setOutput = Operational.updates(current);
+		outputStream = setOutput.map(x -> new Wave(id(), new Atom(current.sample().get()), new Atom(x.get())));
 
 	}
 
-	public void addCommand(SingleBullet<A> c) {
+	public void addCommand(SingleBullet<Atom> c) {
 
-		if (status.isEmpty())
-			current = checkEffectiveness.hold(c);
-		status.add(c.getValue());
+		if (status.isEmpty()) {
+			old = c.getValue();
+			current = checkEffectiveness.hold(c.getValue());
+
+		}
+		status.add((A) c.getValue().get());
 	}
 
-	public Boolean isCorrectCommand(Bullet<A> c) {
-		return this.status.contains(c.getValue());
+	public Boolean isCorrectCommand(Atom x) {
+		return true;
 	}
-
-	public Bullet current() {
-		return current.sample();
-	}
-
-	public Bullet old() {
+	
+	public Atom old() {
 		return old;
 	}
 
-	public void change(SingleBullet c) {
+	public Atom current() {
+		return current.sample();
+	}
+
+
+	public void change(Atom c) {
+		if (isCorrectCommand(c)) {
 			old = current();
-			inputStream.send(c);
-			
+			inputStream.send(new SingleBullet(c));
+		}
 
 	}
 
@@ -69,28 +78,30 @@ public class Field<A> {
 		return a;
 	}
 
-	public Stream<Bullet> input() {
+	public Stream<Bullet<Atom>> input() {
 		return this.inputFromArrow;
 	}
 
-	public Stream<Bullet> output() {
+	public Stream<Bullet<Atom>> output() {
 		return this.outputStream;
 	}
 
-	public Stream<Bullet> con() {
+	public Stream<Atom> con() {
 		return this.checkEffectiveness;
 	}
 
-	public void joinInput(Stream<Bullet> s) {
-			this.inputFromArrow = inputFromArrow.orElse(s);
-			this.checkEffectiveness = this.inputFromArrow.filter(x -> isCorrectCommand(x));
-			this.effectiveCommand = checkEffectiveness.filter(x -> true);
-			this.current = effectiveCommand.hold(current());
-			setOutput = Operational.updates(current);
-			outputStream = setOutput.map(x -> new FieldBullet(this, old().getValue(), current().getValue()));
+	public void joinInput(Stream<Bullet<Atom>> s) {
+		this.inputFromArrow = inputFromArrow.orElse(s);
+		this.checkEffectiveness = this.inputFromArrow.filter(x -> isCorrectCommand(x.getValue()))
+				.map(x -> x.getValue());
+		this.effectiveCommand = this.checkEffectiveness.filter(x -> status.contains(x.get()));
+		this.current = effectiveCommand.hold(current());
+		setOutput = Operational.updates(current);
+		outputStream = setOutput.map(x -> new Wave(id(), new Atom(current.sample().get()), new Atom(x.get())));
+
 	}
 
-//	public void joinOutput(Stream<Bullet> s) {
-//		//this.outputStream = setOutput.orElse(s);
-//	}
+	public String id() {
+		return this.id;
+	}
 }

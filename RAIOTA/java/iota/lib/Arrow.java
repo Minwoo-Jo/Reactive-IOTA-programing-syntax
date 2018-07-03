@@ -2,16 +2,16 @@ package iota.lib;
 
 import nz.sodium.*;
 
-public class Arrow {
+public class Arrow <A>{
 
 	EventHandler e = new NullEvent();
 	Predicate p = new TrueCondition();
-	Bullet c = new SingleBullet(null);
+	Bullet<Atom> c = new SingleBullet(null);
 
-	Stream<Bullet> input = new Stream();
-	Stream<Bullet> check = new Stream();
+	Stream<Bullet<Atom>> input = new Stream();
+	Stream<Bullet<Atom>> check = new Stream();
 	Stream<Predicate> connecter = new Stream();
-	Stream<Bullet> output;
+	Stream<Bullet<Atom>> output;
 
 	public Arrow() {
 		check = input.filter(x -> e.checkType(x));
@@ -29,8 +29,8 @@ public class Arrow {
 		update();
 	}
 
-	public void setCommand(Bullet c) {
-		this.c = c;
+	public void setCommand(Bullet<Atom> c) {
+		this.c = new SingleBullet(new Atom("unlocked"));
 		Transaction.runVoid(() -> {
 			update();
 		});
@@ -58,11 +58,11 @@ public class Arrow {
 		return f;
 	}
 
-	public Stream<Bullet> getInput() {
+	public Stream<Bullet<Atom>> getInput() {
 		return this.input;
 	}
 
-	public Stream<Bullet> getOutput() {
+	public Stream<Bullet<Atom>> getOutput() {
 		return this.output;
 	}
 

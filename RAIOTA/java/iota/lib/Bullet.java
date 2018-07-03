@@ -1,11 +1,12 @@
 package iota.lib;
 
-public interface Bullet<A>  {
+public interface Bullet	<A>  {
+	public String getId();
 	
-	public A getValue();
-	public Field getField();
-	public A getOld();
-	public A getCurrent();
+	public Atom getValue();
+
+	public Atom getOld();
+	public Atom getCurrent();
 	
 
 }

@@ -1,17 +1,15 @@
 package iota.lib;
 
-public class From<A> implements EventHandler{
+public final class From<A> implements EventHandler{
 
-	A value;
+	Atom from;
 	
-	public From(A value) {
-		this.value = value;
+	public From(Atom from) {
+		this.from = from;
 	}
-
 	@Override
 	public Boolean checkType(Bullet b) {
 		// TODO Auto-generated method stub
-		return true;
+		return b.getOld().get().equals(from.get());
 	}
-
 }

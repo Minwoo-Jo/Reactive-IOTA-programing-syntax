@@ -1,6 +1,6 @@
 package iota.lib;
 
 public interface EventHandler<A> {
-	public Boolean checkType(Bullet<A> b);
+	public Boolean checkType(Bullet b);
 
 }

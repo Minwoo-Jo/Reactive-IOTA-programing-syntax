@@ -2,18 +2,18 @@ package iota.lib;
 
 public class To<A> implements EventHandler {
 
-	A value;
+	Atom to;
 
-	public To(A value) {
-		this.value = value;
+	public To(Atom to) {
+		this.to = to;
 	}
 
 
 	@Override
 	public Boolean checkType(Bullet b) {
 		// TODO Auto-generated method stub
-		System.out.println(b.getCurrent());
-		return b.getCurrent().equals(value);
+		System.out.println(b.getOld().get() + " " + b.getCurrent().get());
+		return b.getCurrent().get().equals(to.get());
 	}
 
 }
