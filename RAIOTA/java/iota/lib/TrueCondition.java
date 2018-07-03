@@ -1,6 +1,6 @@
 package iota.lib;
 
-public class TrueCondition implements Condition {
+public class TrueCondition implements Predicate {
 
 	@Override
 	public Boolean isTrue() {

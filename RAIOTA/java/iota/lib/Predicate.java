@@ -1,6 +1,6 @@
 package iota.lib;
 
-public interface Condition {
+public interface Predicate {
 	
 	public Boolean isTrue();
 

@@ -8,40 +8,48 @@ public class Main {
 	
 	public static void main(String[] args) {
 
-		Door A = new Door("frontDoor");
+		Door frontdoor = new Door("frontDoor");
 		Door B = new Door("backDoor");
 		
-		Form fm = new Form();
+		Arrow fm = new Arrow();
 
 		
 		
-		A.getField("lock").link(new Form() {
+		frontdoor.getField("lock").link(new Arrow() {
 			
-			Form apply() {
+			Arrow apply() {
 				EventHandler e = new From("locked");
 				Condition c = new TrueCondition();
+				Command a = new Command("unlocked");
 				
 				def(e);
 				set(c);
+				shoot(a);
+				
 				return this;
 			}
 			
-		}.apply()).obs(B.getField("lock")).shoot(new Command("unlocked"));
+						
+		}.apply()).obs(B.getField("lock"));
 		
-		//A.getField("lock").link(fm).obs(B.getField("lock")).set(new BasicCondition());
 
-			
-		System.out.println("!" + A.getField("lock").current());
+		System.out.println("!" + frontdoor.getField("lock").current());
 		
 		B.getField("lock").change("unlocked");
 		
-		System.out.println("!" + A.getField("lock").current());
-		System.out.println("!" + A.getField("lock").old());
+		System.out.println("!" + frontdoor.getField("lock").current());
+	
+	}
+
+	public void program1() {
+		
+		Door frontdoor = new Door("frontDoor");
+		Light hallwaylight = new Light("hallwaylight");
+
+		hallwaylight.getField("switch").link(new Arrow()).obs(frontdoor.getField("lock"));
 		
 
 	}
-
-	
 	
 }
 /*
