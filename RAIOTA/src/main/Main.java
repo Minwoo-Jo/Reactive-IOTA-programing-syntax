@@ -7,64 +7,75 @@ import nz.sodium.time.*;
 public class Main {
 
 	public static void main(String[] args) {
+		Atom open = new Atom("open");
+		Atom close = new Atom("close");
+		Atom locked = new Atom("locked");
+		Atom unlocked = new Atom("unlocked");
+		Atom on = new Atom("on");
+		Atom off = new Atom("off");
+		
 		Field door = new Field("door");
 
-		door.addCommand(new SingleBullet(new Atom("open")));
-		door.addCommand(new SingleBullet(new Atom("close")));
+		door.addCommand(new SingleBullet(open));
+		door.addCommand(new SingleBullet(close));
 		
 		Field lock = new Field("lock");
-		lock.addCommand(new SingleBullet(new Atom("locked")));
-		lock.addCommand(new SingleBullet(new Atom("unlocked")));
+		lock.addCommand(new SingleBullet(locked));
+		lock.addCommand(new SingleBullet(unlocked));
 		
 		
 		
 		
 		Field button = new Field("button");
 		
-		button.addCommand(new SingleBullet(new Atom("on")));
-		button.addCommand(new SingleBullet(new Atom("off")));
+		button.addCommand(new SingleBullet(on));
+		button.addCommand(new SingleBullet(off));
 		
-		testCase tc = new testCase(button,new Atom("on") );
+		testCase tc = new testCase(door, close);
 
 		Arrow arrow = new Arrow();
 		
-		arrow.setCommand(new SingleBullet(new Atom("unlocked")));
-		//arrow.setHandler(new From(new Atom("open")));
-		//arrow.setHandler(new FromTo(new Atom("open"), new Atom("close")));
-		arrow.setHandler(new To(new Atom("close")));
+		arrow.setCommand(new SingleBullet(unlocked));
+		//arrow.setHandler(new From(open));
+		arrow.setHandler(new FromTo(open, close));
+		//arrow.setHandler(new To(close));
 		arrow.setCondition(tc);
 		
 		door.shoot(arrow).shoot(lock);
-			
-		System.out.println("   lock " + lock.current().get());
-		System.out.println("   door " + door.current().get());
+
+		System.out.println("----lock current\t" + lock.current().get());
+		System.out.println("----door current\t" + door.current().get());
+		System.out.println("----door old\t" + door.old().get());
 		
-		Listener l3 = arrow.getInput().listen(x->System.out.println("input arrow " +x));
-		Listener l4 = arrow.getOutput().listen(x-> System.out.println("output arrow " + x));
+		Listener l3 = arrow.getInput().listen(x->System.out.println("in\tarrow\t" +x));
+		Listener l4 = arrow.getOutput().listen(x-> System.out.println("out\tarrow\t" + x));
 		
-		Listener l5 = door.output().listen(x-> System.out.println("output door " + x));
-		Listener l25 = door.con().listen(x-> System.out.println("efec door "+ x));
-		Listener l6 = door.input().listen(x-> System.out.println("input door " + x));
+		Listener l5 = door.output().listen(x-> System.out.println("out\tdoor\t" + x));
+		Listener l25 = door.con().listen(x-> System.out.println("check\tdoor\t"+ x));
+		Listener l6 = door.input().listen(x-> System.out.println("input\tdoor\t" + x));
 		
-		Listener l9 = arrow.getConnecter().listen(x-> System.out.println("connecter arrow " + x));
+		Listener l9 = arrow.getConnecter().listen(x-> System.out.println("conn\tarrow\t" + x));
 		
-		Listener l21 = lock.output().listen(x-> System.out.println("output lock " + x));
-		Listener l24 = lock.con().listen(x-> System.out.println("efec lock " + x));
-		Listener l22 = lock.input().listen(x-> System.out.println("input lock " + x));
+		Listener l21 = lock.output().listen(x-> System.out.println("out\tlock\t" + x));
+		Listener l24 = lock.con().listen(x-> System.out.println("check\tlock\t" + x));
+		Listener l22 = lock.input().listen(x-> System.out.println("in\tlock\t" + x));
 	
 		
 	
-		door.change(new Atom("close"));	
-		//door.change(new Atom("open"));	
+		door.change(close);	
+		//door.change(open);	
+
+		System.out.println("----lock current\t" + lock.current().get());
+		System.out.println("----door current\t" + door.current().get());
+		System.out.println("----door old\t" + door.old().get());
 		
-		System.out.println("   lock " + lock.current().get());
-		System.out.println("   door " + door.current().get());
-		
-		door.change(new Atom("open"));	
+		door.change(open);	
 		
 
-		System.out.println("   lock " + lock.current().get());
-		System.out.println("   door " + door.current().get());
+		System.out.println("----lock current\t" + lock.current().get());
+		System.out.println("----door current\t" + door.current().get());
+		System.out.println("----door old\t" + door.old().get());
+		
 
 	}
 }

@@ -11,6 +11,7 @@ public final class FromTo<A> implements EventHandler {
 
 	@Override
 	public Boolean checkType(Bullet b) {
+
 		return b.getOld().get().equals(from.get())&&b.getCurrent().get().equals(to.get());
 	}
 }

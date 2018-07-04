@@ -6,7 +6,7 @@ public class Arrow <A>{
 
 	EventHandler e = new NullEvent();
 	Predicate p = new TrueCondition();
-	Bullet<Atom> c = new SingleBullet(null);
+	Bullet<Atom> c = new SingleBullet();
 
 	Stream<Bullet<Atom>> input = new Stream();
 	Stream<Bullet<Atom>> check = new Stream();
@@ -53,6 +53,7 @@ public class Arrow <A>{
 	}
 
 	public Field shoot(Field f) {
+		update();
 		f.joinInput(this.getOutput());
 
 		return f;

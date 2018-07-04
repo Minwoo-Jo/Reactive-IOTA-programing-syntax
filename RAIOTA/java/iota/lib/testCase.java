@@ -11,8 +11,9 @@ public class testCase implements Predicate{
 	}
 	
 	public Boolean isTrue() {
-		if(f.current().get().equals(a.get()))
-				return true;
+		if(f.now().get().equals(a.get())) {
+					return true;
+		}
 		else
 			return false;
 	}
