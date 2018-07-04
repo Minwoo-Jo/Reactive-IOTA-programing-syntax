@@ -6,16 +6,16 @@ import nz.sodium.*;
 
 public class Arrow <A>{
 
-	EventHandler e = new NullEvent();
-	Predicate p = new TrueCondition();
-	Bullet<Atom> c = new SingleBullet();
+	private EventHandler e = new NullEvent();
+	private Predicate p = new TrueCondition();
+	private Bullet<Atom> c = new SingleBullet();
 
-	Stream<Bullet<Atom>> input = new Stream();
-	Stream<Bullet<Atom>> check = new Stream();
-	Stream<Predicate> connecter = new Stream();
-	Stream<Bullet<Atom>> output;
+	private Stream<Bullet<Atom>> input = new Stream();
+	private Stream<Bullet<Atom>> check = new Stream();
+	private Stream<Predicate> connecter = new Stream();
+	private Stream<Bullet<Atom>> output;
 	
-	ArrayList<Field> linkedField = new ArrayList();
+	private ArrayList<Field> linkedField = new ArrayList();
 
 	public Arrow() {
 		check = input.filter(x -> e.checkType(x));

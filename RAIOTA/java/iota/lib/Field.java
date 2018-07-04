@@ -19,12 +19,12 @@ public class Field<A> {
 	private Stream<Atom> effectiveCommand;
 	private Atom old = new Atom();
 	private Atom now = new Atom();
-
-	Cell<Atom> current = new Cell<Atom>(null);
-
+	private Cell<Atom> current = new Cell<Atom>(null);
 	private Stream<Atom> setOutput;
 	private Stream<Bullet<Atom>> outputStream;
 
+	private ArrayList<Arrow> linkedArrow = new ArrayList();
+	
 	public Field(A fName) {
 
 		this.fName = fName;
@@ -50,7 +50,7 @@ public class Field<A> {
 		status.add((A) c.getValue().get());
 	}
 
-	public Boolean isCorrectCommand(Atom x) {
+	private Boolean isCorrectCommand(Atom x) {
 		if (status.contains(x.get())) {
 			old = new Atom(current().get());
 			now = new Atom(x.get());
@@ -67,7 +67,7 @@ public class Field<A> {
 		return new Atom(now.get());
 	}
 
-	public Atom current() {
+	private Atom current() {
 		return new Atom(current.sample().get());
 	}
 
@@ -80,8 +80,9 @@ public class Field<A> {
 	}
 
 	public Arrow shoot(Arrow a) {
+		linkedArrow.add(a);
 		a.setInput(this);
-		a.update();
+		update();
 		return a;
 	}
 
@@ -106,12 +107,15 @@ public class Field<A> {
 		return this.id;
 	}
 
-	public void update() {
+	private void update() {
 		this.checkEffectiveness = this.inputFromArrow.filter(x -> isCorrectCommand(x.getValue()))
 				.map(x -> x.getValue());
 		this.effectiveCommand = this.checkEffectiveness.filter(x -> status.contains(x.get()));
 		this.current = effectiveCommand.hold(current());
 		this.setOutput = Operational.updates(current);
 		this.outputStream = setOutput.map(x -> new Wave(id(), new Atom(current.sample().get()), new Atom(x.get())));
+		
+		for(Arrow a : linkedArrow) 
+			a.setInput(this);
 	}
 }

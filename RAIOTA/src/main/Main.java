@@ -44,7 +44,7 @@ public class Main {
 		arrow.setCommand(new SingleBullet(unlocked));
 		// arrow.setHandler(new FromTo(open, close));
 		// arrow.setCondition(tc);
-		door.shoot(arrow).shoot(lock);
+		
 		// door2.shoot(arrow);
 
 		arrow2.setCommand(new SingleBullet(off));
@@ -52,7 +52,8 @@ public class Main {
 		arrow2.shoot(button);
 		arrow2.shoot(button2);
 		lock.shoot(arrow2);
-
+		door.shoot(arrow).shoot(lock);
+		
 		Listener l3 = arrow2.getInput().listen(x -> System.out.println("in\tarrow2\t" + x));
 		Listener l4 = arrow2.getOutput().listen(x -> System.out.println("out\tarrow2\t" + x));
 		Listener l9 = arrow2.getConnecter().listen(x -> System.out.println("conn\tarrow2\t" + x));
@@ -77,17 +78,17 @@ public class Main {
 
 		// door.change(open);
 
-		System.out.println("----lock current\t" + lock.current().get());
-		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----button current\t" + button.current().get());
-		System.out.println("----button2 current\t" + button2.current().get());
+		System.out.println("----lock current\t" + lock.now().get());
+		System.out.println("----door current\t" + door.now().get());
+		System.out.println("----button current\t" + button.now().get());
+		System.out.println("----button2 current\t" + button2.now().get());
 		// door.change(open);
 		door.change(close);
 		// lock.change(unlocked);
-		System.out.println("----lock current\t" + lock.current().get());
-		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----button current\t" + button.current().get());
-		System.out.println("----button2 current\t" + button2.current().get());
+		System.out.println("----lock current\t" + lock.now().get());
+		System.out.println("----door current\t" + door.now().get());
+		System.out.println("----button current\t" + button.now().get());
+		System.out.println("----button2 current\t" + button2.now().get());
 
 	}
 }
