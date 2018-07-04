@@ -8,4 +8,10 @@ public class TrueCondition implements Predicate {
 		return true;
 	}
 
+	@Override
+	public Field getField() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

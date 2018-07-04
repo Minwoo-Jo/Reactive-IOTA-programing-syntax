@@ -20,7 +20,7 @@ public class Field<A> {
 	private Atom old = new Atom();
 	private Atom now = new Atom();
 
-	private Cell<Atom> current = new Cell<Atom>(null);
+	Cell<Atom> current = new Cell<Atom>(null);
 
 	private Stream<Atom> setOutput;
 	private Stream<Bullet<Atom>> outputStream;
@@ -80,8 +80,8 @@ public class Field<A> {
 	}
 
 	public Arrow shoot(Arrow a) {
-		update();
 		a.setInput(this);
+		a.update();
 		return a;
 	}
 

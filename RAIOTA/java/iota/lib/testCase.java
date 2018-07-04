@@ -18,4 +18,10 @@ public class testCase implements Predicate{
 			return false;
 	}
 
+	@Override
+	public Field getField() {
+		// TODO Auto-generated method stub
+		return f;
+	}
+
 }

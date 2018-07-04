@@ -13,69 +13,81 @@ public class Main {
 		Atom unlocked = new Atom("unlocked");
 		Atom on = new Atom("on");
 		Atom off = new Atom("off");
-		
+
 		Field door = new Field("door");
 
 		door.addCommand(new SingleBullet(open));
 		door.addCommand(new SingleBullet(close));
-		
+
+		Field door2 = new Field("door");
+
+		door2.addCommand(new SingleBullet(open));
+		door2.addCommand(new SingleBullet(close));
+
 		Field lock = new Field("lock");
 		lock.addCommand(new SingleBullet(locked));
 		lock.addCommand(new SingleBullet(unlocked));
-		
-		
-		
-		
+
 		Field button = new Field("button");
-		
+
 		button.addCommand(new SingleBullet(on));
 		button.addCommand(new SingleBullet(off));
-		
-		testCase tc = new testCase(door, close);
 
+		Field button2 = new Field("button");
+
+		button2.addCommand(new SingleBullet(on));
+		button2.addCommand(new SingleBullet(off));
+
+		// testCase tc = new testCase(door, open);
+		Arrow arrow2 = new Arrow();
 		Arrow arrow = new Arrow();
-		
 		arrow.setCommand(new SingleBullet(unlocked));
-		//arrow.setHandler(new From(open));
-		arrow.setHandler(new FromTo(open, close));
-		//arrow.setHandler(new To(close));
-		arrow.setCondition(tc);
-		
+		// arrow.setHandler(new FromTo(open, close));
+		// arrow.setCondition(tc);
 		door.shoot(arrow).shoot(lock);
+		// door2.shoot(arrow);
+
+		arrow2.setCommand(new SingleBullet(off));
+
+		arrow2.shoot(button);
+		arrow2.shoot(button2);
+		lock.shoot(arrow2);
+
+		Listener l3 = arrow2.getInput().listen(x -> System.out.println("in\tarrow2\t" + x));
+		Listener l4 = arrow2.getOutput().listen(x -> System.out.println("out\tarrow2\t" + x));
+		Listener l9 = arrow2.getConnecter().listen(x -> System.out.println("conn\tarrow2\t" + x));
+
+		Listener l5 = door.output().listen(x -> System.out.println("out\tdoor\t" + x));
+		Listener l25 = door.con().listen(x -> System.out.println("check\tdoor\t" + x));
+		Listener l6 = door.input().listen(x -> System.out.println("input\tdoor\t" + x));
+
+		Listener l21 = lock.output().listen(x -> System.out.println("out\tlock\t" + x));
+		Listener l24 = lock.con().listen(x -> System.out.println("check\tlock\t" + x));
+		Listener l22 = lock.input().listen(x -> System.out.println("in\tlock\t" + x));
+
+		Listener l213 = button.output().listen(x -> System.out.println("out\tbutton\t" + x));
+		Listener l244 = button.con().listen(x -> System.out.println("check\tbutton\t" + x));
+		Listener l221 = button.input().listen(x -> System.out.println("in\tbutton\t" + x));
+
+		Listener l33 = arrow.getInput().listen(x -> System.out.println("in\tarrow\t" + x));
+		Listener l34 = arrow.getOutput().listen(x -> System.out.println("out\tarrow\t" + x));
+		Listener l49 = arrow.getConnecter().listen(x -> System.out.println("conn\tarrow\t" + x));
+
+		// button.change(off);
+
+		// door.change(open);
 
 		System.out.println("----lock current\t" + lock.current().get());
 		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----door old\t" + door.old().get());
-		
-		Listener l3 = arrow.getInput().listen(x->System.out.println("in\tarrow\t" +x));
-		Listener l4 = arrow.getOutput().listen(x-> System.out.println("out\tarrow\t" + x));
-		
-		Listener l5 = door.output().listen(x-> System.out.println("out\tdoor\t" + x));
-		Listener l25 = door.con().listen(x-> System.out.println("check\tdoor\t"+ x));
-		Listener l6 = door.input().listen(x-> System.out.println("input\tdoor\t" + x));
-		
-		Listener l9 = arrow.getConnecter().listen(x-> System.out.println("conn\tarrow\t" + x));
-		
-		Listener l21 = lock.output().listen(x-> System.out.println("out\tlock\t" + x));
-		Listener l24 = lock.con().listen(x-> System.out.println("check\tlock\t" + x));
-		Listener l22 = lock.input().listen(x-> System.out.println("in\tlock\t" + x));
-	
-		
-	
-		door.change(close);	
-		//door.change(open);	
-
+		System.out.println("----button current\t" + button.current().get());
+		System.out.println("----button2 current\t" + button2.current().get());
+		// door.change(open);
+		door.change(close);
+		// lock.change(unlocked);
 		System.out.println("----lock current\t" + lock.current().get());
 		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----door old\t" + door.old().get());
-		
-		door.change(open);	
-		
-
-		System.out.println("----lock current\t" + lock.current().get());
-		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----door old\t" + door.old().get());
-		
+		System.out.println("----button current\t" + button.current().get());
+		System.out.println("----button2 current\t" + button2.current().get());
 
 	}
 }

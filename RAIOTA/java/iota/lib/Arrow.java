@@ -1,5 +1,7 @@
 package iota.lib;
 
+import java.util.ArrayList;
+
 import nz.sodium.*;
 
 public class Arrow <A>{
@@ -12,6 +14,8 @@ public class Arrow <A>{
 	Stream<Bullet<Atom>> check = new Stream();
 	Stream<Predicate> connecter = new Stream();
 	Stream<Bullet<Atom>> output;
+	
+	ArrayList<Field> linkedField = new ArrayList();
 
 	public Arrow() {
 		check = input.filter(x -> e.checkType(x));
@@ -30,7 +34,7 @@ public class Arrow <A>{
 	}
 
 	public void setCommand(Bullet<Atom> c) {
-		this.c = new SingleBullet(new Atom("unlocked"));
+		this.c = new SingleBullet(c.getCurrent());
 		Transaction.runVoid(() -> {
 			update();
 		});
@@ -52,11 +56,11 @@ public class Arrow <A>{
 		f.joinInput(this.getOutput());
 	}
 
-	public Field shoot(Field f) {
-		update();
+	public Arrow shoot(Field f) {
+		linkedField.add(f);
 		f.joinInput(this.getOutput());
-
-		return f;
+		update();
+		return this;
 	}
 
 	public Stream<Bullet<Atom>> getInput() {
@@ -75,6 +79,9 @@ public class Arrow <A>{
 		check = input.filter(x -> e.checkType(x));
 		connecter = check.map(x -> p).filter(x -> x.isTrue());
 		output = connecter.map(x -> c);
+		for(Field f : linkedField) {
+			f.joinInput(this.getOutput());
+		}
 
 	}
 }
