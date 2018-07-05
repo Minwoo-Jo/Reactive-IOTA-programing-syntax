@@ -16,43 +16,48 @@ public class Main {
 
 		Field door = new Field("door");
 
-		door.addCommand(new SingleBullet(open));
-		door.addCommand(new SingleBullet(close));
+		door.addCommand(open);
+		door.addCommand(close);
 
 		Field door2 = new Field("door");
 
-		door2.addCommand(new SingleBullet(open));
-		door2.addCommand(new SingleBullet(close));
+		door2.addCommand(open);
+		door2.addCommand(close);
 
 		Field lock = new Field("lock");
-		lock.addCommand(new SingleBullet(locked));
-		lock.addCommand(new SingleBullet(unlocked));
+		lock.addCommand(locked);
+		lock.addCommand(unlocked);
 
 		Field button = new Field("button");
 
-		button.addCommand(new SingleBullet(on));
-		button.addCommand(new SingleBullet(off));
+		button.addCommand(on);
+		button.addCommand(off);
 
 		Field button2 = new Field("button");
 
-		button2.addCommand(new SingleBullet(on));
-		button2.addCommand(new SingleBullet(off));
+		button2.addCommand(on);
+		button2.addCommand(off);
 
-		// testCase tc = new testCase(door, open);
 		Arrow arrow2 = new Arrow();
 		Arrow arrow = new Arrow();
 		arrow.setCommand(new SingleBullet(unlocked));
-		// arrow.setHandler(new FromTo(open, close));
-		// arrow.setCondition(tc);
+
 		
-		// door2.shoot(arrow);
+		SingleBullet abc = new SingleBullet(off);
+
+		System.out.println("!!!!!");
 
 		arrow2.setCommand(new SingleBullet(off));
 
-		arrow2.shoot(button);
-		arrow2.shoot(button2);
-		lock.shoot(arrow2);
-		door.shoot(arrow).shoot(lock);
+		door.shoot(arrow).shoot(lock).shoot(arrow2).shoot(button);
+		
+		door2.shoot(arrow);
+
+		
+		
+		
+		
+		
 		
 		Listener l3 = arrow2.getInput().listen(x -> System.out.println("in\tarrow2\t" + x));
 		Listener l4 = arrow2.getOutput().listen(x -> System.out.println("out\tarrow2\t" + x));
@@ -78,17 +83,18 @@ public class Main {
 
 		// door.change(open);
 
-		System.out.println("----lock current\t" + lock.now().get());
-		System.out.println("----door current\t" + door.now().get());
-		System.out.println("----button current\t" + button.now().get());
-		System.out.println("----button2 current\t" + button2.now().get());
-		// door.change(open);
+		System.out.println("----lock current\t" + lock.current().get());
+		System.out.println("----door current\t" + door.current().get());
+		System.out.println("----button current\t" + button.current().get());
+		System.out.println("----button2 current\t" + button2.current().get());
+		//door.change(open);
 		door.change(close);
+		//door.change(close);
 		// lock.change(unlocked);
-		System.out.println("----lock current\t" + lock.now().get());
-		System.out.println("----door current\t" + door.now().get());
-		System.out.println("----button current\t" + button.now().get());
-		System.out.println("----button2 current\t" + button2.now().get());
+		System.out.println("----lock current\t" + lock.current().get());
+		System.out.println("----door current\t" + door.current().get());
+		System.out.println("----button current\t" + button.current().get());
+		System.out.println("----button2 current\t" + button2.current().get());
 
 	}
 }

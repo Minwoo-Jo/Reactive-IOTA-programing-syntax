@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 import nz.sodium.*;
 
-public class Arrow <A>{
+public class Arrow<A> {
 
 	private EventHandler e = new NullEvent();
 	private Predicate p = new TrueCondition();
-	private Bullet<Atom> c = new SingleBullet();
-
+	private Bullet<Atom> c;
 	private Stream<Bullet<Atom>> input = new Stream();
 	private Stream<Bullet<Atom>> check = new Stream();
 	private Stream<Predicate> connecter = new Stream();
 	private Stream<Bullet<Atom>> output;
-	
+
 	private ArrayList<Field> linkedField = new ArrayList();
 
 	public Arrow() {
+		c = new SingleBullet();
 		check = input.filter(x -> e.checkType(x));
 		connecter = check.map(x -> p).filter(x -> x.isTrue());
 		output = connecter.map(x -> c);
@@ -34,33 +34,28 @@ public class Arrow <A>{
 	}
 
 	public void setCommand(Bullet<Atom> c) {
-		this.c = new SingleBullet(c.getCurrent());
-		Transaction.runVoid(() -> {
-			update();
-		});
+		this.c = new SingleBullet(c.getValue());
+		update();
+		
 
 	}
 
 	public Arrow setInput(Field f) {
-
-		Transaction.runVoid(() -> {
-			this.input = input.orElse(f.output());
-			update();
-
-		});
+		this.input = input.orElse(f.output());
+		update();
 		return this;
 	}
 
 	public void setOutput(Field f) {
 
-		f.joinInput(this.getOutput());
+		f.joinInput(this);
 	}
 
-	public Arrow shoot(Field f) {
+	public Field shoot(Field f) {
 		linkedField.add(f);
-		f.joinInput(this.getOutput());
+		f.joinInput(this);
 		update();
-		return this;
+		return f;
 	}
 
 	public Stream<Bullet<Atom>> getInput() {
@@ -79,8 +74,8 @@ public class Arrow <A>{
 		check = input.filter(x -> e.checkType(x));
 		connecter = check.map(x -> p).filter(x -> x.isTrue());
 		output = connecter.map(x -> c);
-		for(Field f : linkedField) {
-			f.joinInput(this.getOutput());
+		for (Field f : linkedField) {
+			f.joinInput(this);
 		}
 
 	}

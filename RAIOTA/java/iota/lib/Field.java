@@ -8,23 +8,20 @@ import java.util.Optional.*;
 public class Field<A> {
 	private A fName;
 	private String id;
-
-	private ArrayList<A> status = new ArrayList();;
+	private ArrayList<A> status = new ArrayList();
 
 	private StreamSink<SingleBullet<Atom>> inputStream;
 	private Stream<Bullet<Atom>> inputFromArrow;
-
 	private Stream<Atom> checkEffectiveness;
-
 	private Stream<Atom> effectiveCommand;
 	private Atom old = new Atom();
-	private Atom now = new Atom();
-	private Cell<Atom> current = new Cell<Atom>(null);
+	private Atom current = new Atom();
+	private Cell<Atom> currentCell = new Cell<Atom>(null);
 	private Stream<Atom> setOutput;
 	private Stream<Bullet<Atom>> outputStream;
 
 	private ArrayList<Arrow> linkedArrow = new ArrayList();
-	
+
 	public Field(A fName) {
 
 		this.fName = fName;
@@ -33,89 +30,86 @@ public class Field<A> {
 		inputFromArrow = new Stream().orElse(inputStream);
 		checkEffectiveness = inputFromArrow.filter(x -> isCorrectCommand(x.getValue()))
 				.map(x -> new Atom(x.getValue().get()));
-		effectiveCommand = checkEffectiveness.filter(x -> status.contains(x.get()));
-		current = effectiveCommand.hold(null);
-		setOutput = Operational.updates(current);
-		outputStream = setOutput.map(x -> new Wave(id(), new Atom(old.get()), new Atom(x.get())));
+		effectiveCommand = checkEffectiveness.map(x->x);
+		currentCell = effectiveCommand.hold(null);
+		setOutput = Operational.updates(currentCell);
+		outputStream = setOutput.map(x -> new Wave(id(), old(), x));
 
 	}
 
-	public void addCommand(SingleBullet<Atom> c) {
+	public void addCommand(Atom c) {
 
 		if (status.isEmpty()) {
-			current = checkEffectiveness.hold(c.getValue());
-			now = new Atom(c.getValue().get());
+			currentCell = checkEffectiveness.hold(c);
+			current = c;
 
 		}
-		status.add((A) c.getValue().get());
+		status.add((A) c.get());
 	}
 
 	private Boolean isCorrectCommand(Atom x) {
 		if (status.contains(x.get())) {
-			old = new Atom(current().get());
-			now = new Atom(x.get());
+			old = currentCellValue();
+			current = x;
 			return true;
 		} else
 			return false;
+
 	}
 
 	public Atom old() {
 		return new Atom(old.get());
 	}
 
-	public Atom now() {
-		return new Atom(now.get());
+	public Atom current() {
+		return new Atom(current.get());
 	}
 
-	private Atom current() {
-		return new Atom(current.sample().get());
+	private Atom currentCellValue() {
+		return new Atom(currentCell.sample().get());
 	}
 
 	public void change(Atom c) {
-		if (isCorrectCommand(c)) {
-			old = new Atom(current().get());
+		if (status.contains(c.get()) && !current.get().equals(c.get())) {
+			old = current();
 			inputStream.send(new SingleBullet(c));
 		}
-
 	}
 
 	public Arrow shoot(Arrow a) {
-		linkedArrow.add(a);
+		if (!linkedArrow.contains(a))
+			linkedArrow.add(a);
 		a.setInput(this);
 		update();
 		return a;
 	}
-
 	public Stream<Bullet<Atom>> input() {
 		return this.inputFromArrow;
 	}
-
 	public Stream<Bullet<Atom>> output() {
 		return this.outputStream;
 	}
-
 	public Stream<Atom> con() {
 		return this.checkEffectiveness;
 	}
-
-	public void joinInput(Stream<Bullet<Atom>> s) {
-		this.inputFromArrow = inputFromArrow.orElse(s);
+	public void joinInput(Arrow a) {
+		this.inputFromArrow = inputFromArrow.orElse(a.getOutput());
 		update();
 	}
-
+	public A fname() {
+		return fName;
+	}
 	public String id() {
 		return this.id;
 	}
-
 	private void update() {
-		this.checkEffectiveness = this.inputFromArrow.filter(x -> isCorrectCommand(x.getValue()))
-				.map(x -> x.getValue());
-		this.effectiveCommand = this.checkEffectiveness.filter(x -> status.contains(x.get()));
-		this.current = effectiveCommand.hold(current());
-		this.setOutput = Operational.updates(current);
-		this.outputStream = setOutput.map(x -> new Wave(id(), new Atom(current.sample().get()), new Atom(x.get())));
-		
-		for(Arrow a : linkedArrow) 
+		checkEffectiveness = inputFromArrow.filter(x -> isCorrectCommand(x.getValue()))
+				.map(x -> new Atom(x.getValue().get()));
+		effectiveCommand = checkEffectiveness.map(x->x);
+		currentCell = effectiveCommand.hold(current());
+		setOutput = Operational.updates(currentCell);
+		outputStream = setOutput.map(x -> new Wave(id(), old(), x));
+		for (Arrow a : linkedArrow)
 			a.setInput(this);
 	}
 }
