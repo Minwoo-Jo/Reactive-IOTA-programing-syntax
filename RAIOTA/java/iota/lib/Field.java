@@ -115,7 +115,5 @@ public class Field<A> {
 			a.setInput(this);
 	}
 	
-	public String name() {
-		return fdName;
-	}
+	
 }

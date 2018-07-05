@@ -27,13 +27,13 @@ public class Device<A> {
 	//필드를 생성, 추가하는 메소드
 	public void addField(Field fd) {
 		fields.add(fd);
-		map.put(fd.name(), fd);
+		map.put((String) fd.fname(), fd);
 	}
 	//모든 필드와 그 필드의 상태(Atom)을 문자열로 출력
 		public String getField() {
 			String fNa = "";
 			for(Field fd : fields) {
-				fNa = fNa+"Field : "+fd.name()+"	State : "+fd.current().get()+"\n";
+				fNa = fNa+"Field : "+fd.fname()+"	State : "+fd.current().get()+"\n";
 			}
 			return fNa; 
 		}
