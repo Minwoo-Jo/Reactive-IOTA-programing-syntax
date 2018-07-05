@@ -1,19 +1,26 @@
 package main;
 
-import iota.lib.*;
-import nz.sodium.*;
-import nz.sodium.time.*;
+import java.util.Scanner;
+
+import iota.lib.Arrow;
+import iota.lib.Atom;
+import iota.lib.Field;
+import iota.lib.SingleBullet;
+import nz.sodium.Listener;
 
 public class Main {
 
 	public static void main(String[] args) {
+		RegisteredDevices rd = new RegisteredDevices();
+		
+		
 		Atom open = new Atom("open");
 		Atom close = new Atom("close");
 		Atom locked = new Atom("locked");
 		Atom unlocked = new Atom("unlocked");
 		Atom on = new Atom("on");
 		Atom off = new Atom("off");
-
+/*
 		Field door = new Field("door");
 
 		door.addCommand(open);
@@ -37,43 +44,44 @@ public class Main {
 
 		button2.addCommand(on);
 		button2.addCommand(off);
-
+	*/
+		
 		Arrow arrow2 = new Arrow();
 		Arrow arrow = new Arrow();
 		arrow.setCommand(new SingleBullet(unlocked));
 
-		
+
 		SingleBullet abc = new SingleBullet(off);
 
 		System.out.println("!!!!!");
 
 		arrow2.setCommand(new SingleBullet(off));
 
-		door.shoot(arrow).shoot(lock).shoot(arrow2).shoot(button);
-		
-		door2.shoot(arrow);
+		rd.EntranceDoor.Status.shoot(arrow).shoot(rd.EntranceDoor.Lock).shoot(arrow2).shoot(rd.HallwayLight.Switch);
 
-		
-		
-		
-		
-		
-		
+		rd.KitchenDoor.Status.shoot(arrow);
+
+
+
+
+
+
+
 		Listener l3 = arrow2.getInput().listen(x -> System.out.println("in\tarrow2\t" + x));
 		Listener l4 = arrow2.getOutput().listen(x -> System.out.println("out\tarrow2\t" + x));
 		Listener l9 = arrow2.getConnecter().listen(x -> System.out.println("conn\tarrow2\t" + x));
 
-		Listener l5 = door.output().listen(x -> System.out.println("out\tdoor\t" + x));
-		Listener l25 = door.con().listen(x -> System.out.println("check\tdoor\t" + x));
-		Listener l6 = door.input().listen(x -> System.out.println("input\tdoor\t" + x));
+		Listener l5 = rd.EntranceDoor.Status.output().listen(x -> System.out.println("out\tdoor\t" + x));
+		Listener l25 = rd.EntranceDoor.Status.con().listen(x -> System.out.println("check\tdoor\t" + x));
+		Listener l6 = rd.EntranceDoor.Status.input().listen(x -> System.out.println("input\tdoor\t" + x));
 
-		Listener l21 = lock.output().listen(x -> System.out.println("out\tlock\t" + x));
-		Listener l24 = lock.con().listen(x -> System.out.println("check\tlock\t" + x));
-		Listener l22 = lock.input().listen(x -> System.out.println("in\tlock\t" + x));
+		Listener l21 = rd.EntranceDoor.Lock.output().listen(x -> System.out.println("out\tlock\t" + x));
+		Listener l24 = rd.EntranceDoor.Lock.con().listen(x -> System.out.println("check\tlock\t" + x));
+		Listener l22 = rd.EntranceDoor.Lock.input().listen(x -> System.out.println("in\tlock\t" + x));
 
-		Listener l213 = button.output().listen(x -> System.out.println("out\tbutton\t" + x));
-		Listener l244 = button.con().listen(x -> System.out.println("check\tbutton\t" + x));
-		Listener l221 = button.input().listen(x -> System.out.println("in\tbutton\t" + x));
+		Listener l213 = rd.HallwayLight.Switch.output().listen(x -> System.out.println("out\tbutton\t" + x));
+		Listener l244 = rd.HallwayLight.Switch.con().listen(x -> System.out.println("check\tbutton\t" + x));
+		Listener l221 = rd.HallwayLight.Switch.input().listen(x -> System.out.println("in\tbutton\t" + x));
 
 		Listener l33 = arrow.getInput().listen(x -> System.out.println("in\tarrow\t" + x));
 		Listener l34 = arrow.getOutput().listen(x -> System.out.println("out\tarrow\t" + x));
@@ -83,20 +91,56 @@ public class Main {
 
 		// door.change(open);
 
-		System.out.println("----lock current\t" + lock.current().get());
-		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----button current\t" + button.current().get());
-		System.out.println("----button2 current\t" + button2.current().get());
+		rd.printAllState();
+		printConsole(rd);
+		
+		/*
+		System.out.println("----lock current\t" + rd.EntranceDoor.Lock.current().get());
+		System.out.println("----door current\t" + rd.EntranceDoor.Status.current().get());
+		System.out.println("----button current\t" + rd.HallwayLight.Switch.current().get());
+		System.out.println("----button2 current\t" + rd.AilseLight.Switch.current().get());
 		//door.change(open);
-		door.change(close);
+		rd.EntranceDoor.Status.change(close);
 		//door.change(close);
 		// lock.change(unlocked);
-		System.out.println("----lock current\t" + lock.current().get());
-		System.out.println("----door current\t" + door.current().get());
-		System.out.println("----button current\t" + button.current().get());
-		System.out.println("----button2 current\t" + button2.current().get());
-
+		System.out.println("----lock current\t" + rd.EntranceDoor.Lock.current().get());
+		System.out.println("----door current\t" + rd.EntranceDoor.Status.current().get());
+		System.out.println("----button current\t" + rd.HallwayLight.Switch.current().get());
+		System.out.println("----button2 current\t" + rd.AilseLight.Switch.current().get());
+*/
 	}
+
+	public static void printConsole(RegisteredDevices rd) {
+
+		Scanner input = new Scanner(System.in);
+		while (true) {
+			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+			System.out.print("Device: ");
+			String device = input.nextLine();
+			System.out.print("Field: ");
+			String field = input.nextLine();
+			System.out.print("Event: ");
+			String event = input.nextLine();
+
+			if (device.equals("Stop") || field.equals("Stop")|| event.equals("Stop")) { // Stop이 입력 되면 스레드 중지
+				rd.printAllState();
+				System.out.println("IOTA Stream 시뮬레이션 종료");
+				break;
+			}
+
+			if(rd.map.containsKey(device)) {
+				if(rd.map.get(device).map.containsKey(field))
+					rd.map.get(device).getField(field).change(new Atom(event));
+				else System.out.println("등록된 필드가 아닙니다.");
+			}
+			else System.out.println("등록된 디바이스가 아닙니다.");
+
+			rd.printAllState();
+
+		}
+
+	} 
+
 }
 /*
  * 

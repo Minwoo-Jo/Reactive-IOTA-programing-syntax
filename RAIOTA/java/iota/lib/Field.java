@@ -9,6 +9,7 @@ public class Field<A> {
 	private A fName;
 	private String id;
 	private ArrayList<A> status = new ArrayList();
+	private String fdName;
 
 	private StreamSink<SingleBullet<Atom>> inputStream;
 	private Stream<Bullet<Atom>> inputFromArrow;
@@ -23,7 +24,8 @@ public class Field<A> {
 	private ArrayList<Arrow> linkedArrow = new ArrayList();
 
 	public Field(A fName) {
-
+		fdName = (String)fName;
+		
 		this.fName = fName;
 		this.id = this.toString();
 		inputStream = new StreamSink();
@@ -111,5 +113,9 @@ public class Field<A> {
 		outputStream = setOutput.map(x -> new Wave(id(), old(), x));
 		for (Arrow a : linkedArrow)
 			a.setInput(this);
+	}
+	
+	public String name() {
+		return fdName;
 	}
 }
