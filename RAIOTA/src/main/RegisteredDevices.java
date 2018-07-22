@@ -1,59 +1,59 @@
 package main;
 
-import nz.sodium.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional.*;
-import iota.lib.*;
+
+import nz.sodium.Listener;
+import nz.sodium.Stream;
 
 public class RegisteredDevices {
-	public Door EntranceDoor;
-	public Door KitchenDoor;
-	public Light HallwayLight;
-	public Light AilseLight;
-	public MotionSensor MotionSensor;
+	private static RegisteredDevices rd;
+
+	Door FrontDoor = new Door("FrontDoor");
+	Door EntranceDoor = new Door("EntranceDoor");
+	Light HallwayLight = new Light("HallwayLight");
+	Phone Mom_Phone = new Phone("Mom_Phone");
+	Phone Dad_Phone = new Phone("Dad_Phone");
+	Phone Child_Phone = new Phone("Child_Phone");
+
+
+	HashMap<String, Device> dMap = new HashMap();
 	
-	
-	
-	public HashMap<String, Device> map = new HashMap();
-	
-	public RegisteredDevices() {
-		EntranceDoor = new Door("EntranceDoor");
-		KitchenDoor = new Door("KitchenDoor");
-		
-		HallwayLight = new Light("HallwayLight");
-		AilseLight = new Light("AilseLight");
-		
-		//MotionSensor = new MotionSensor("MotionSensor");
-		
-		map.put("EntranceDoor", EntranceDoor);
-		map.put("KitchenDoor", KitchenDoor);
-		map.put("HallwayLight", HallwayLight);
-		map.put("AilseLight", AilseLight);
+	private RegisteredDevices() {
+		dMap.put(FrontDoor.devName, FrontDoor);
+		dMap.put(EntranceDoor.devName, EntranceDoor);
+		dMap.put(HallwayLight.devName, HallwayLight);
+		dMap.put(Mom_Phone.devName, Mom_Phone);
+		dMap.put(Dad_Phone.devName, Dad_Phone);
+		dMap.put(Child_Phone.devName, Child_Phone);
 	}
 	
-	public void printAllState() {
-		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		System.out.println(EntranceDoor.getName());
-		System.out.println(EntranceDoor.getField());
+	public static RegisteredDevices set() {
+		if(rd==null)
+			rd = new RegisteredDevices();
 		
-		System.out.println(KitchenDoor.getName());
-		System.out.println(KitchenDoor.getField());
-		
-		System.out.println(HallwayLight.getName());
-		System.out.println(HallwayLight.getField());
-		
-		System.out.println(AilseLight.getName());
-		System.out.println(AilseLight.getField());
-		/*
-		System.out.println(MotionSensor.getName());
-		System.out.println(MotionSensor.getField("Sensor").name());
-		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		*/
-		}
-
+		return rd;
+	}
+	
+	public Device device(String s) {
+		return dMap.get(s);
+	}
+	
 	
 
-	
+	public void print() {
+
+		System.out.println("\nFrontDoor    |\tLock\t:: "+FrontDoor.Lock.current());
+		System.out.println("             |\tStatus\t:: " +FrontDoor.Status.current());
+		System.out.println("EntranceDoor |\tLock\t:: "+EntranceDoor.Lock.current());
+		System.out.println("             |\tStatus\t:: "+EntranceDoor.Status.current());
+		System.out.println("HallwayLight |\tSwitch\t:: "+HallwayLight.Switch.current());
+		System.out.println("             |\t       ");
+		System.out.println("Mom_Phone    |\tLocation:: "+Mom_Phone.Location.current());
+		System.out.println("Dad_Phone    |\tLocation:: "+Dad_Phone.Location.current());
+		System.out.println("Child_Phone  |\tLocation:: "+Child_Phone.Location.current());
+		
+		
+		System.out.println("-------------------------------------------------------");
+	}
 }
-

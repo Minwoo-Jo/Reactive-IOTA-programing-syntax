@@ -1,82 +1,76 @@
 package iota.lib;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import nz.sodium.*;
+import nz.sodium.time.*;
 
 public class Arrow<A> {
 
-	private EventHandler e = new NullEvent();
-	private Predicate p = new TrueCondition();
-	private Bullet<Atom> c;
-	private Stream<Bullet<Atom>> input = new Stream();
-	private Stream<Bullet<Atom>> check = new Stream();
-	private Stream<Predicate> connecter = new Stream();
-	private Stream<Bullet<Atom>> output;
-
-	private ArrayList<Field> linkedField = new ArrayList();
+	public ECA eca;
+	private Stream<Tuple> input = new Stream();
+	private Listener connecter = new Listener();
+	private StreamSink<Cmd> output = new StreamSink();
+	public Field inputField;
+	public Field outputField;
 
 	public Arrow() {
-		c = new SingleBullet();
-		check = input.filter(x -> e.checkType(x));
-		connecter = check.map(x -> p).filter(x -> x.isTrue());
-		output = connecter.map(x -> c);
+//		connecter = input.listen(x -> new Thread() {
+//			public void run() {
+//				if (eca.apply((Cmd) x.fst(), (Cmd) x.snd()) != null)
+//					output.send(eca.apply((Cmd) x.fst(), (Cmd) x.snd()));
+//			}
+//		}.start());
+		////	output = input.map(x -> eca.apply((Cmd) x.fst(), (Cmd) x.snd())).filter(x -> x != null);
 	}
 
-	public void setHandler(EventHandler e) {
-		this.e = e;
-		update();
+	public Arrow(ECA eca) {
+		this.eca = eca;
 	}
-
-	public void setCondition(Predicate p) {
-		this.p = p;
-		update();
-	}
-
-	public void setCommand(Bullet<Atom> c) {
-		this.c = new SingleBullet(c.getValue());
-		update();
-		
-
-	}
-
-	public Arrow setInput(Field f) {
-		this.input = input.orElse(f.output());
-		update();
+	public Arrow set(ECA eca) {
+		this.eca = eca;
 		return this;
 	}
 
-	public void setOutput(Field f) {
-
-		f.joinInput(this);
+	public Arrow setInput(Field f) {
+		this.inputField = f;
+	//	this.input = inputField.output();
+		return this;
 	}
 
-	public Field shoot(Field f) {
-		linkedField.add(f);
-		f.joinInput(this);
-		update();
-		return f;
+	public Arrow shoot(Field f) {
+		this.outputField = f;
+		return this;
 	}
 
-	public Stream<Bullet<Atom>> getInput() {
+	public Arrow shoot(Timer tf) {
+		this.outputField = tf;
+		return this;
+	}
+
+	public Stream<Tuple> getInput() {
 		return this.input;
 	}
 
-	public Stream<Bullet<Atom>> getOutput() {
+	public Stream<Cmd> getOutput() {
 		return this.output;
 	}
 
-	public Stream<Predicate> getConnecter() {
-		return this.connecter;
-	}
-
-	public void update() {
-		check = input.filter(x -> e.checkType(x));
-		connecter = check.map(x -> p).filter(x -> x.isTrue());
-		output = connecter.map(x -> c);
-		for (Field f : linkedField) {
-			f.joinInput(this);
-		}
+	public Arrow update() {
+		connecter.unlisten();
+		//this.input = inputField.output();
+		
+		connecter = ((Stream<Tuple>)(inputField.output())).listen(x -> new Thread() {
+			public void run() {
+				if (eca.apply((Cmd) x.fst(), (Cmd) x.snd()) != null)
+					output.send(eca.apply((Cmd) x.fst(), (Cmd) x.snd()));
+			}
+		}.start());
+		outputField.joinInput(this);
+		
+		//output = input.map(x -> eca.apply(x.fst(), x.snd())).filter(x -> x != null);
+		return this;
 
 	}
 }

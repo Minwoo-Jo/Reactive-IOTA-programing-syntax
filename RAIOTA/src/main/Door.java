@@ -4,25 +4,39 @@ import java.util.HashMap;
 
 import iota.lib.*;
 
+public class Door extends Device{
+	Field Status;
+	Field Lock;
+	Timer Timer;
+	Door(String dName) {
+		super(dName);
 
-public class Door<A> extends Device{
-	public Field<A> Status;
-	public Field<A> Lock;
-	public Door(String devName) {
-		this.devName = devName;
 		Status = new Field("Status");
-		Lock = new Field("Lock");
-
+		Status.add(Cmd.open);
+		Status.add(Cmd.close);
 		addField(Status);
-		Status.addCommand(new Atom("open"));
-		Status.addCommand(new Atom("close"));
 		
+		Lock = new Field("Lock");
+		Lock.add(Cmd.lock);
+		Lock.add(Cmd.unlock);
 		addField(Lock);
-		Lock.addCommand(new Atom("locked"));
-		Lock.addCommand(new Atom("unlocked"));
 		
+		Timer = new Timer("Timer");
+		Timer.add(Cmd.stop);
+		Timer.add(Cmd.start);
+		addField(Timer);
 
+		
+	}
+
+
+	public Cmd Status() {
+		return Status.current();
+	}
+	
+	
+	public Cmd Lock() {
+		return Lock.current();
 	}
 
 }
-

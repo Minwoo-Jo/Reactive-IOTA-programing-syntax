@@ -4,25 +4,25 @@ import java.util.HashMap;
 
 import iota.lib.*;
 
-public class Light extends Device {
+public class Sensor extends Device {
 	Field Switch;
 	Timer Timer;
-	Light(String dName) {
+	Sensor(String dName) {
 		super(dName);
-		Switch = new Field("Switch");
-		
-		Switch.add(Cmd.off);
+		Field Switch = new Field("Switch");
 		Switch.add(Cmd.on);
+		Switch.add(Cmd.off);
 		addField(Switch);
 		
 		Timer = new Timer("Timer");
 		Timer.add(Cmd.stop);
 		Timer.add(Cmd.start);
 		addField(Timer);
-
 	}
+
 	public Cmd Switch() {
 		return Switch.current();
 	}
+
 
 }
